@@ -11,20 +11,24 @@ const indicator = document.querySelector('#indicator');
 
 registerForm.addEventListener('submit', event => {
     event.preventDefault();
-    createUserWithEmailAndPassword(auth, registerEmail.value, registerPassword.value)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            console.log(user);
-            window.location = 'index.html';
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            if (errorCode === 'auth/email-already-in-use') {
-                alert('This email is already registered! \nPlease Log In')
+    if (registerPassword.value === registerRePassword.value) {
+        createUserWithEmailAndPassword(auth, registerEmail.value, registerPassword.value)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log(user);
                 window.location = 'index.html';
-            }
-            console.log(errorCode);
-            console.log(errorMessage);
-        });
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const editedError = errorCode.slice(5);
+                if (errorCode === 'auth/email-already-in-use') {
+                    alert('This email is already registered! \nPlease Log In')
+                    window.location = 'index.html';
+                }else{
+                    alert(editedError);
+                }
+            });
+    }else{
+        indicator.innerHTML = 'Passwords donot match!'
+    }
 })
