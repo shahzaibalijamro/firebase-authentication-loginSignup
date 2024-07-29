@@ -11,7 +11,7 @@ onAuthStateChanged(auth, (user) => {
 });
 btn.addEventListener('click', () => {
     signOut(auth).then(() => {
-        alert('Signed Out!')
+        console.log('Signed Out!')
         window.location = 'index.html'
     }).catch((error) => {
         alert('An error appeared');

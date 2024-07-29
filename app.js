@@ -70,6 +70,7 @@ import {
   .then((result) => {
     const user = result.user;
     console.log();
+    window.location = "home.html";
   }).catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
