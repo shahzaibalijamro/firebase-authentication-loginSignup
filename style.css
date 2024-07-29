@@ -122,7 +122,10 @@
     font-size: 14px;
     color: red;
   }
-
+  .container{
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+  }
 
   @media(max-width:500px){
     .form{
