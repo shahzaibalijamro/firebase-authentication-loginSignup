@@ -1,10 +1,14 @@
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import { auth } from "./firebaseConfig.js";
+import { collection, addDoc, getDocs  } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js"; 
+import { db } from "./firebaseConfig.js";
 const btn = document.querySelector('#btn');
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const uid = user.uid;
         console.log(user);
+        welcomeText.innerHTML = `Hi, ${user.displayName}`
+        img.src = `${user.photoURL}`
     } else {
         window.location = 'index.html'
     }
@@ -17,18 +21,32 @@ btn.addEventListener('click', () => {
         alert('An error appeared');
     });
 })
+async function getData() {
+    const querySnapshot = await getDocs(collection(db, "todos"));
+    querySnapshot.forEach((doc) => {
+        todo.push(doc.data());
+});
+    printTodo();
+}
+getData();
 let todo = [];
 let input = document.querySelector('.input');
+let form = document.querySelector('#form');
+let welcomeText = document.querySelector('#welcome-text');
+let img = document.querySelector('#img');
 let div = document.querySelector('.main');
 let addTodo = document.querySelector('#addTodo');
 let deleteTodo = document.querySelector('#deleteTodo');
 let editTodo = document.querySelector('#editTodo');
+function navbarSet() {
+    welcomeText.innerHTML = `Hi, ${user}`
+}
 function printTodo() {
     div.innerHTML = '';
     for (let i = 0; i < todo.length; i++) {
         div.innerHTML += `
         <div class="list">
-            <h2 class="main-head">${todo[i]}</h2>
+            <h2 class="main-head">${todo[i].todo}</h2>
             <div class="icons">
                 <div id="editTodo">
                     <i class="fa-solid fa-1 fa-pen-to-square"></i>
@@ -42,9 +60,20 @@ function printTodo() {
         ;
     }
 }
-addTodo.addEventListener('click', ()=>{
-    todo.push(input.value);
-    input.value = '';
+form.addEventListener('submit', async (event)=>{
+    event.preventDefault();
+    todo.push({
+        todo: input.value
+    }
+    );
     printTodo();
-    console.log(todo);
+    try {
+        const docRef = await addDoc(collection(db, "todos"), {
+            todo: input.value
+        });
+        input.value = '';
+        console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
 })
