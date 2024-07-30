@@ -7,11 +7,11 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         const uid = user.uid;
         console.log(user);
-        if (user.displayName) {
-            welcomeText.innerHTML = `Hi, ${user.displayName}`
-        }else{
-            welcomeText.innerHTML = `${user.email}`
-        }
+        // if (user.displayName) {
+        //     welcomeText.innerHTML = `Hi, ${user.displayName}`
+        // }else{
+        //     welcomeText.innerHTML = `${user.email}`
+        // }
         img.src = `${user.photoURL}`
     } else {
         window.location = 'index.html'
@@ -27,6 +27,11 @@ btn.addEventListener('click', () => {
 })
 async function getData() {
     const querySnapshot = await getDocs(collection(db, "todos"));
+    if (auth.currentUser.displayName) {
+        welcomeText.innerHTML = `Hi, ${auth.currentUser.displayName}`
+    }else{
+        welcomeText.innerHTML = `${auth.currentUser.email}`
+    }
     querySnapshot.forEach((doc) => {
         todo.push(doc.data());
 });
@@ -42,9 +47,6 @@ let div = document.querySelector('.main');
 let addTodo = document.querySelector('#addTodo');
 let deleteTodo = document.querySelector('#deleteTodo');
 let editTodo = document.querySelector('#editTodo');
-function navbarSet() {
-    welcomeText.innerHTML = `Hi, ${user}`
-}
 function printTodo() {
     div.innerHTML = '';
     for (let i = 0; i < todo.length; i++) {
