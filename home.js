@@ -7,7 +7,11 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         const uid = user.uid;
         console.log(user);
-        welcomeText.innerHTML = `Hi, ${user.displayName}`
+        if (user.displayName) {
+            welcomeText.innerHTML = `Hi, ${user.displayName}`
+        }else{
+            welcomeText.innerHTML = `${user.email}`
+        }
         img.src = `${user.photoURL}`
     } else {
         window.location = 'index.html'
